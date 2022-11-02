@@ -21,7 +21,7 @@ public class KafkaProducerConfig {
     public ProducerFactory<String, EmployeeDTO> producerFactory(){
         Map<String, Object> config = new HashMap<>();
 
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
@@ -31,7 +31,8 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, EmployeeDTO> employeeDTOKafkaTemplate(){
+    public KafkaTemplate<String, EmployeeDTO> kafkaTemplate(){
+
         return new KafkaTemplate<>(producerFactory());
     }
 }

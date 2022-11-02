@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutionException;
+
 @Component
 public class MessageService {
     @Autowired
@@ -27,17 +29,20 @@ public class MessageService {
             Preconditions.checkNotNull(employee.getSpringExperience());
             sendMessage(employee);
         }catch (Exception e){
-            sendMessageToDLQ(employee);
+                sendMessageToDLQ(employee);
         }
 
     }
-    private void sendMessage(EmployeeDTO employee) {
+    private void sendMessage(EmployeeDTO employee)  {
         System.out.println("Sending employee to employees_update topic");
         kafkaTemplate.send(topicName, employee);
+        kafkaTemplate.flush();
+
     }
 
     private void sendMessageToDLQ(EmployeeDTO employee) {
         System.out.println("Sending employee to deadletter topic");
         kafkaTemplate.send(deadletter, employee);
+
     }
 }
